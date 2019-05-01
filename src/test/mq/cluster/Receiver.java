@@ -1,4 +1,4 @@
-package test.mq.helloworld;
+package test.mq.cluster;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
@@ -11,7 +11,7 @@ public class Receiver {
         ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
                 ActiveMQConnectionFactory.DEFAULT_USER,
                 ActiveMQConnectionFactory.DEFAULT_PASSWORD,
-                "tcp://localhost:61616");
+                "failover:(tcp://192.168.7.124:51511,tcp://192.168.7.124:51512,tcp://192.168.7.124:51513)?Randomize=false\"");
         //第二步：通过ConnectionFactory工厂对象我们创建一个Connection连接，并且调用Connection的
         //start方法开启连接，Connection默认是关闭的
         Connection connection = connectionFactory.createConnection();
@@ -24,7 +24,7 @@ public class Receiver {
 
         //第四步，通过Session创建Destination对象，指的是一个客户端用来指定生产消息目标
         //和消费消息来源的对象，在PTP模式中，Destination被称为Queue,在发布订阅模式中称为Topic
-        Destination destination = session.createQueue("queue1");
+        Destination destination = session.createQueue("first");
         //第五步：我们需要通过Session对象创建消息的发送和接收对象（生产者和接收者）MessageProducer/MessageConsumer
         MessageConsumer messageConsumer = session.createConsumer(destination);
         while(true) {
